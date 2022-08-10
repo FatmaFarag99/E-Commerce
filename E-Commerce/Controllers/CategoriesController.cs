@@ -7,9 +7,9 @@
 
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : BaseController<Product, ProductViewModel>
+    public class CategoriesController : BaseController<Category, CategoryViewModel>
     {
-        public ProductsController(IProductUnitOfWork unitOfWork, IMapper mapper, IValidator<ProductViewModel> validator)
+        public CategoriesController(ICategoryUnitOfWork unitOfWork, IMapper mapper, IValidator<CategoryViewModel> validator)
             : base(unitOfWork, mapper, validator)
         {
         }

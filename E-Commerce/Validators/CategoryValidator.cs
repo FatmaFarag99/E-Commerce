@@ -2,9 +2,9 @@
 {
     using FluentValidation;
 
-    public class ProductValidator : AbstractValidator<ProductViewModel>
+    public class CategoryValidator : AbstractValidator<CategoryViewModel>
     {
-        public ProductValidator()
+        public CategoryValidator()
         {
             RuleFor(p => p.Name).NotEmpty().WithMessage("Name cannot be empty");
             RuleFor(p => p.NameSecondLanguage).NotEmpty().WithMessage("NameSecondLanguage cannot be empty");
