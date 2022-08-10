@@ -1,13 +1,14 @@
-﻿namespace ECommerce.Entities.Configurations
+﻿namespace ECommerce
 {
+    using ECommerce.Common;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-    public class ProductConfiguration : IEntityTypeConfiguration<Product>
+    public class ProductConfiguration : BaseEntityConfiguration<Product>
     {
-        public void Configure(EntityTypeBuilder<Product> builder)
+        public override void Configure(EntityTypeBuilder<Product> builder)
         {
-            builder.HasKey(p => p.Id);
+            builder.ToTable("Products");
 
             builder.Property(p => p.Name).IsRequired().HasMaxLength(400);
             builder.Property(p => p.NameSecondLanguage).IsRequired().HasMaxLength(400);

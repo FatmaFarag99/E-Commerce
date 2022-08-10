@@ -1,74 +1,143 @@
-﻿// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace ECommerce
+﻿namespace ECommerce
 {
     using AutoMapper;
+    using ECommerce.Common;
+    using FluentValidation;
+    using FluentValidation.Results;
     using Microsoft.AspNetCore.Mvc;
-    using System.ComponentModel.DataAnnotations;
 
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProductsController : ControllerBase
+    public class BaseController<TEntity, TViewModel> : ControllerBase
+        where TEntity : BaseEntity
+        where TViewModel : BaseViewModel
     {
-        private readonly IProductUnitOfWork _productUnitOfWork;
+        private readonly IBaseUnitOfWork<TEntity> _unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly IValidator<TViewModel> _validator;
 
-        protected Mapper _mapper;
-
-        public ProductsController(IProductUnitOfWork productUnitOfWork)
+        public BaseController(IBaseUnitOfWork<TEntity> unitOfWork, IMapper mapper, IValidator<TViewModel> validator)
         {
-            _productUnitOfWork = productUnitOfWork;
-
-            var mapperConfiguration = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<Product, ProductViewModel>().ReverseMap();
-            });
-            _mapper = new Mapper(mapperConfiguration);
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+            _validator = validator;
         }
 
-        // GET: api/<ProductsController>
         [HttpGet]
-        public async Task<IEnumerable<ProductViewModel>> Get()
+        public async Task<IEnumerable<TViewModel>> Get()
         {
-            List<Product> entities = await _productUnitOfWork.ReadAsync();
-            return entities.Select(product => _mapper.Map<ProductViewModel>(product));
+            List<TEntity> entities = await _unitOfWork.ReadAsync();
+            return entities.Select(product => _mapper.Map<TViewModel>(product));
         }
 
-        // GET api/<ProductsController>/5
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            Product product = await _productUnitOfWork.ReadByIdAsync(id);
-            ProductViewModel productViewModel = _mapper.Map<ProductViewModel>(product);
-
-            FluentValidation.Results.ValidationResult validationResult = await new ProductValidator().ValidateAsync(productViewModel);
-
-            if (!validationResult.IsValid)
-                return BadRequest(new { errors = validationResult.Errors });
-
+            TEntity product = await _unitOfWork.ReadByIdAsync(id);
+            var productViewModel = _mapper.Map<TViewModel>(product);
             return Ok(productViewModel);
         }
 
-        // POST api/<ProductsController>
         [HttpPost]
-        public async Task<ProductViewModel> Post([FromBody] Product product)
+        public async Task<IActionResult> Post([FromBody] TViewModel productViewModel)
         {
-            product = await _productUnitOfWork.CreateAsync(product);
-            return _mapper.Map<ProductViewModel>(product);
+            ValidationResult validationResult = await _validator.ValidateAsync(productViewModel);
+            if (!validationResult.IsValid)
+                return BadRequest(new { errors = validationResult.Errors });
+
+            var product = _mapper.Map<TEntity>(productViewModel);
+
+            product = await _unitOfWork.CreateAsync(product);
+
+            return CreatedAtAction(nameof(Get), new { id = product.Id }, _mapper.Map<TViewModel>(product));
         }
 
-        // PUT api/<ProductsController>/5
         [HttpPut]
-        public async Task<ProductViewModel> Put([FromBody] Product product)
+        public async Task<IActionResult> Put([FromBody] TViewModel productViewModel)
         {
-            product = await _productUnitOfWork.UpdateAsync(product);
-            return _mapper.Map<ProductViewModel>(product);
+            ValidationResult validationResult = await _validator.ValidateAsync(productViewModel);
+            if (!validationResult.IsValid)
+                return BadRequest(new { errors = validationResult.Errors });
+
+            var product = _mapper.Map<TEntity>(productViewModel);
+
+            product = await _unitOfWork.UpdateAsync(product);
+
+            return Ok(_mapper.Map<TViewModel>(product));
         }
 
-        // DELETE api/<ProductsController>/5
         [HttpDelete("{id}")]
         public async Task Delete(Guid id)
         {
-            await _productUnitOfWork.DeleteAsync(id);
+            await _unitOfWork.DeleteAsync(id);
         }
+    }
+
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ProductsController : BaseController<Product, ProductViewModel>
+    {
+        public ProductsController(IProductUnitOfWork unitOfWork, IMapper mapper, IValidator<ProductViewModel> validator)
+            : base(unitOfWork, mapper, validator)
+        {
+        }
+
+        //private readonly IProductUnitOfWork _productUnitOfWork;
+        //private readonly IMapper _mapper;
+        //private readonly IValidator<ProductViewModel> _validator;
+
+        //public ProductsController(IProductUnitOfWork productUnitOfWork, IMapper mapper, IValidator<ProductViewModel> validator)
+        //{
+        //    _productUnitOfWork = productUnitOfWork;
+        //    _mapper = mapper;
+        //    _validator = validator;
+        //}
+
+        //[HttpGet]
+        //public async Task<IEnumerable<ProductViewModel>> Get()
+        //{
+        //    List<Product> entities = await _productUnitOfWork.ReadAsync();
+        //    return entities.Select(product => _mapper.Map<ProductViewModel>(product));
+        //}
+
+        //[HttpGet("{id}")]
+        //public async Task<IActionResult> Get(Guid id)
+        //{
+        //    Product product = await _productUnitOfWork.ReadByIdAsync(id);
+        //    ProductViewModel productViewModel = _mapper.Map<ProductViewModel>(product);
+        //    return Ok(productViewModel);
+        //}
+
+        //[HttpPost]
+        //public async Task<IActionResult> Post([FromBody] ProductViewModel productViewModel)
+        //{
+        //    ValidationResult validationResult = await _validator.ValidateAsync(productViewModel);
+        //    if (!validationResult.IsValid)
+        //        return BadRequest(new { errors = validationResult.Errors });
+
+        //    var product = _mapper.Map<Product>(productViewModel);
+
+        //    product = await _productUnitOfWork.CreateAsync(product);
+
+        //    return CreatedAtAction(nameof(Get), new { id = product.Id }, _mapper.Map<ProductViewModel>(product));
+        //}
+
+        //[HttpPut]
+        //public async Task<IActionResult> Put([FromBody] ProductViewModel productViewModel)
+        //{
+        //    ValidationResult validationResult = await _validator.ValidateAsync(productViewModel);
+        //    if (!validationResult.IsValid)
+        //        return BadRequest(new { errors = validationResult.Errors });
+
+        //    var product = _mapper.Map<Product>(productViewModel);
+
+        //    product = await _productUnitOfWork.UpdateAsync(product);
+
+        //    return AcceptedAtAction(nameof(Get), new { id = product.Id },  _mapper.Map<ProductViewModel>(product));
+        //}
+
+        //[HttpDelete("{id}")]
+        //public async Task Delete(Guid id)
+        //{
+        //    await _productUnitOfWork.DeleteAsync(id);
+        //}
     }
 }
