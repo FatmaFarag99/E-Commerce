@@ -1,8 +1,8 @@
-﻿namespace ECommerce.Common
+﻿namespace ECommerce.Common.Repositories
 {
     using System.Linq.Expressions;
 
-    public interface IBaseRepository<BaseEntity> 
+    public interface IBaseRepository<BaseEntity>
     {
         ApplicationDbContext Context { get; }
         Task<IEnumerable<BaseEntity>> GetAllAsync();

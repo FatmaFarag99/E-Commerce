@@ -1,0 +1,65 @@
+﻿namespace ECommerce.Common.Controllers
+{
+    using ECommerce.Common.Entities;
+    using ECommerce.Common.UnitOfWorks;
+    using FluentValidation;
+    using Microsoft.AspNetCore.Mvc;
+    using System;
+    using System.Threading.Tasks;
+
+    public class BaseController<BaseEntity> : BaseGetController<BaseEntity>, IBaseController<BaseEntity>
+    {
+        private readonly IBaseUnitOfWork<BaseEntity> _unitOfWork;
+        private readonly IValidator<BaseEntity> _validator;
+
+        public BaseController(IBaseUnitOfWork<BaseEntity> unitOfWork, IValidator<BaseEntity> validator)
+            : base(unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+            _validator = validator;
+        }
+
+        [HttpDelete("{id}")]
+        public virtual async Task<IActionResult> Delete(Guid id)
+        {
+            BaseEntity entity = await _unitOfWork.DeleteByIdAsync(id);
+            return Ok(entity);
+        }
+
+        [HttpPost]
+        public virtual async Task<IActionResult> Post([FromBody] BaseEntity entity)
+        {
+            if (entity == null)
+                return BadRequest("ViewModel can not be null");
+
+            var result = _validator.Validate(entity);
+            if (!result.IsValid)
+            {
+                string text = string.Join("-", result.Errors.Select(e => e.ErrorMessage));
+                throw new Exception("Invalid ViewModel: " + text);
+            }
+
+            entity = await _unitOfWork.CreateAsync(entity);
+
+            return Ok(entity);
+        }
+
+        [HttpPut]
+        public virtual async Task<IActionResult> Put([FromBody] BaseEntity entity)
+        {
+            if (entity == null)
+                return BadRequest("ViewModel can not be null");
+
+            var result = _validator.Validate(entity);
+            if (!result.IsValid)
+            {
+                string text = string.Join("-", result.Errors.Select(e => e.ErrorMessage));
+                throw new Exception("Invalid ViewModel: " + text);
+            }
+
+            entity = await _unitOfWork.UpdateAsync(entity);
+
+            return Ok(entity);
+        }
+    }
+}

@@ -1,5 +1,7 @@
-﻿namespace ECommerce.Common
+﻿namespace ECommerce.Common.UnitOfWorks
 {
+    using ECommerce.Common.Entities;
+    using ECommerce.Common.Repositories;
     using System;
     using System.Collections.Generic;
     using System.Linq.Expressions;
@@ -53,6 +55,6 @@
 
             return entityFromDb;
         }
-       
+
     }
 }

@@ -3,7 +3,6 @@ namespace ECommerce
 {
     using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
-    using System.ComponentModel.DataAnnotations;
 
     [Route("api/[controller]")]
     [ApiController]

@@ -1,5 +1,6 @@
-﻿namespace ECommerce.Common
+﻿namespace ECommerce.Common.Repositories
 {
+    using ECommerce.Common.Entities;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
@@ -7,7 +8,7 @@
 
     public class BaseRepository : IBaseRepository<BaseEntity>
     {
-        public ApplicationDbContext Context { get;}
+        public ApplicationDbContext Context { get; }
         protected DbSet<BaseEntity> _table;
         public BaseRepository(ApplicationDbContext context)
         {
@@ -25,7 +26,7 @@
         }
 
         public virtual async Task<BaseEntity> GetByIdAsync(Guid id) => await _table.Where(e => e.Id == id).OrderBy(e => e.DisplayOrder).FirstOrDefaultAsync();
-        
+
 
         public virtual async Task<BaseEntity> AddAsync(BaseEntity entity)
         {
@@ -57,12 +58,12 @@
 
         public virtual int GetMaxDisplayOrder()
         {
-            if(((IQueryable<BaseEntity>) _table).Any())
+            if (_table.Any())
             {
-                return ((IQueryable<BaseEntity>)_table).Max(e => e.DisplayOrder);
+                return _table.Max(e => e.DisplayOrder);
             }
             return 0;
         }
-      
+
     }
 }
