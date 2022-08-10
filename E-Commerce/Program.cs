@@ -1,5 +1,7 @@
 using ECommerce;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductUnitOfWork, ProductUnitOfWork>();
 
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
 
 builder.Services.AddControllers();

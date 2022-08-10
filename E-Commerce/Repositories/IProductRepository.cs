@@ -1,19 +1,8 @@
 ﻿namespace ECommerce
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq.Expressions;
-    using System.Threading.Tasks;
+    using ECommerce.Common;
 
-    public interface IProductRepository
+    public interface IProductRepository : IBaseRepository<Product>
     {
-        ApplicationDbContext DbContext { get; }
-
-        Task<Product> AddAsync(Product product);
-        Task<Product> DeleteAsync(Guid id);
-        Task<Product> EditAsync(Product product);
-        Task<List<Product>> GetAllAsync();
-        Task<List<Product>> GetByExprissionAsync(Expression<Func<Product, bool>> expression);
-        Task<Product> GetByIdAsync(Guid id);
     }
 }
