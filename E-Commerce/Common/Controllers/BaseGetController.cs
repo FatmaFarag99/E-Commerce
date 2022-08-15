@@ -1,27 +1,29 @@
 ﻿namespace ECommerce.Common.Controllers
 {
+    using ECommerce.Common.Entities;
     using ECommerce.Common.UnitOfWorks;
     using Microsoft.AspNetCore.Mvc;
     using System;
     using System.Threading.Tasks;
 
-    public class BaseGetController<BaseEntity> : ControllerBase, IBaseGetController
+    public class BaseGetController<TEntity> : ControllerBase, IBaseGetController 
+        where TEntity : BaseEntity
     {
-        private readonly IBaseUnitOfWork<BaseEntity> _unitOfWork;
+        private readonly IBaseUnitOfWork<TEntity> _unitOfWork;
 
-        public BaseGetController(IBaseUnitOfWork<BaseEntity> unitOfWork) => _unitOfWork = unitOfWork;
+        public BaseGetController(IBaseUnitOfWork<TEntity> unitOfWork) => _unitOfWork = unitOfWork;
       
         [HttpGet]
         public virtual async Task<IActionResult> GetAllAsync()
         {
-            IEnumerable<BaseEntity> viewModels = await _unitOfWork.ReadAllAsync();
+            IEnumerable<TEntity> viewModels = await _unitOfWork.ReadAllAsync();
             return Ok(viewModels);
         }
 
         [HttpGet("{id}")]
         public virtual async Task<IActionResult> GetByIdAsync(Guid id)
         {
-            BaseEntity viewModel = await _unitOfWork.ReadByIdAsync(id);
+            TEntity viewModel = await _unitOfWork.ReadByIdAsync(id);
             return Ok(viewModel);
         }
     }

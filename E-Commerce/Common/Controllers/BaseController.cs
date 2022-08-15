@@ -7,12 +7,13 @@
     using System;
     using System.Threading.Tasks;
 
-    public class BaseController<BaseEntity> : BaseGetController<BaseEntity>, IBaseController<BaseEntity>
+    public class BaseController<TEntity> : BaseGetController<TEntity>, IBaseController<TEntity>
+        where TEntity : BaseEntity
     {
-        private readonly IBaseUnitOfWork<BaseEntity> _unitOfWork;
-        private readonly IValidator<BaseEntity> _validator;
+        private readonly IBaseUnitOfWork<TEntity> _unitOfWork;
+        private readonly IValidator<TEntity> _validator;
 
-        public BaseController(IBaseUnitOfWork<BaseEntity> unitOfWork, IValidator<BaseEntity> validator)
+        public BaseController(IBaseUnitOfWork<TEntity> unitOfWork, IValidator<TEntity> validator)
             : base(unitOfWork)
         {
             _unitOfWork = unitOfWork;
@@ -22,12 +23,12 @@
         [HttpDelete("{id}")]
         public virtual async Task<IActionResult> Delete(Guid id)
         {
-            BaseEntity entity = await _unitOfWork.DeleteByIdAsync(id);
+            TEntity entity = await _unitOfWork.DeleteByIdAsync(id);
             return Ok(entity);
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> Post([FromBody] BaseEntity entity)
+        public virtual async Task<IActionResult> Post([FromBody] TEntity entity)
         {
             if (entity == null)
                 return BadRequest("ViewModel can not be null");
@@ -45,7 +46,7 @@
         }
 
         [HttpPut]
-        public virtual async Task<IActionResult> Put([FromBody] BaseEntity entity)
+        public virtual async Task<IActionResult> Put([FromBody] TEntity entity)
         {
             if (entity == null)
                 return BadRequest("ViewModel can not be null");

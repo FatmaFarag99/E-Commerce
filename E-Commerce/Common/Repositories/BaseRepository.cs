@@ -6,29 +6,30 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public class BaseRepository : IBaseRepository<BaseEntity>
+    public class BaseRepository<TEntity> : IBaseRepository<TEntity> 
+        where TEntity : BaseEntity
     {
         public ApplicationDbContext Context { get; }
-        protected DbSet<BaseEntity> _table;
+        protected DbSet<TEntity> _table;
         public BaseRepository(ApplicationDbContext context)
         {
             Context = context;
-            _table = context.Set<BaseEntity>();
+            _table = context.Set<TEntity>();
         }
 
-        public virtual async Task<IEnumerable<BaseEntity>> GetAllAsync() => await _table.OrderBy(e => e.DisplayOrder).ToListAsync();
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync() => await _table.OrderBy(e => e.DisplayOrder).ToListAsync();
 
 
 
-        public virtual async Task<IEnumerable<BaseEntity>> GetByExprissionAsync(System.Linq.Expressions.Expression<Func<BaseEntity, bool>> expression)
+        public virtual async Task<IEnumerable<TEntity>> GetByExprissionAsync(System.Linq.Expressions.Expression<Func<TEntity, bool>> expression)
         {
             return await _table.Where(expression).OrderBy(e => e.DisplayOrder).ToListAsync();
         }
 
-        public virtual async Task<BaseEntity> GetByIdAsync(Guid id) => await _table.Where(e => e.Id == id).OrderBy(e => e.DisplayOrder).FirstOrDefaultAsync();
+        public virtual async Task<TEntity> GetByIdAsync(Guid id) => await _table.Where(e => e.Id == id).OrderBy(e => e.DisplayOrder).FirstOrDefaultAsync();
 
 
-        public virtual async Task<BaseEntity> AddAsync(BaseEntity entity)
+        public virtual async Task<TEntity> AddAsync(TEntity entity)
         {
             var maxDisplayOrder = GetMaxDisplayOrder();
             entity.DisplayOrder = maxDisplayOrder++;
@@ -36,9 +37,9 @@
 
         }
 
-        public virtual async Task<BaseEntity> DeleteAsync(Guid id)
+        public virtual async Task<TEntity> DeleteAsync(Guid id)
         {
-            BaseEntity entityFromDb = await GetByIdAsync(id);
+            TEntity entityFromDb = await GetByIdAsync(id);
             if (entityFromDb == null)
                 throw new Exception("Entity dosn't exist in database");
 
@@ -47,9 +48,9 @@
             return entityFromDb;
         }
 
-        public virtual async Task<BaseEntity> EditAsync(BaseEntity entity)
+        public virtual async Task<TEntity> EditAsync(TEntity entity)
         {
-            BaseEntity entityFromDb = await GetByIdAsync(entity.Id);
+            TEntity entityFromDb = await GetByIdAsync(entity.Id);
             if (entityFromDb == null)
                 return await AddAsync(entity);
             else

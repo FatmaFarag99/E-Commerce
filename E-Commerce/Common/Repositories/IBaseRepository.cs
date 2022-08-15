@@ -1,15 +1,17 @@
 ﻿namespace ECommerce.Common.Repositories
 {
+    using ECommerce.Common.Entities;
     using System.Linq.Expressions;
 
-    public interface IBaseRepository<BaseEntity>
+    public interface IBaseRepository<TEntity> 
+        where TEntity : BaseEntity
     {
         ApplicationDbContext Context { get; }
-        Task<IEnumerable<BaseEntity>> GetAllAsync();
-        Task<IEnumerable<BaseEntity>> GetByExprissionAsync(Expression<Func<BaseEntity, bool>> expression);
-        Task<BaseEntity> GetByIdAsync(Guid id);
-        Task<BaseEntity> AddAsync(BaseEntity entity);
-        Task<BaseEntity> DeleteAsync(Guid id);
-        Task<BaseEntity> EditAsync(BaseEntity entity);
+        Task<IEnumerable<TEntity>> GetAllAsync();
+        Task<IEnumerable<TEntity>> GetByExprissionAsync(Expression<Func<TEntity, bool>> expression);
+        Task<TEntity> GetByIdAsync(Guid id);
+        Task<TEntity> AddAsync(TEntity entity);
+        Task<TEntity> DeleteAsync(Guid id);
+        Task<TEntity> EditAsync(TEntity entity);
     }
 }

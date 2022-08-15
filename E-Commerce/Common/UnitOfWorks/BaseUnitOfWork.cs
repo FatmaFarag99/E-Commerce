@@ -7,50 +7,50 @@
     using System.Linq.Expressions;
     using System.Threading.Tasks;
 
-    public class BaseUnitOfWork : IBaseUnitOfWork<BaseEntity>
+    public class BaseUnitOfWork<TEntity> : IBaseUnitOfWork<TEntity> where TEntity : BaseEntity
     {
-        private readonly IBaseRepository<BaseEntity> _repository;
+        private readonly IBaseRepository<TEntity> _repository;
         protected readonly ApplicationDbContext _context;
 
-        public BaseUnitOfWork(IBaseRepository<BaseEntity> repository)
+        public BaseUnitOfWork(IBaseRepository<TEntity> repository)
         {
             _repository = repository;
             _context = repository.Context;
         }
-        public virtual async Task<IEnumerable<BaseEntity>> ReadAllAsync()
+        public virtual async Task<IEnumerable<TEntity>> ReadAllAsync()
         {
-            IEnumerable<BaseEntity> entities = await _repository.GetAllAsync();
+            IEnumerable<TEntity> entities = await _repository.GetAllAsync();
             return entities;
         }
 
-        public virtual async Task<IEnumerable<BaseEntity>> ReadByExpressionAsync(Expression<Func<BaseEntity, bool>> expression)
+        public virtual async Task<IEnumerable<TEntity>> ReadByExpressionAsync(Expression<Func<TEntity, bool>> expression)
         {
-            IEnumerable<BaseEntity> entities = await _repository.GetByExprissionAsync(expression);
+            IEnumerable<TEntity> entities = await _repository.GetByExprissionAsync(expression);
             return entities;
         }
 
-        public virtual async Task<BaseEntity> ReadByIdAsync(Guid id)
+        public virtual async Task<TEntity> ReadByIdAsync(Guid id)
         {
-            BaseEntity entity = await _repository.GetByIdAsync(id);
+            TEntity entity = await _repository.GetByIdAsync(id);
             return entity;
         }
-        public virtual async Task<BaseEntity> CreateAsync(BaseEntity entity)
+        public virtual async Task<TEntity> CreateAsync(TEntity entity)
         {
-            BaseEntity entityFromDb = await _repository.AddAsync(entity);
+            TEntity entityFromDb = await _repository.AddAsync(entity);
             await _context.SaveChangesAsync();
 
             return entityFromDb;
         }
-        public virtual async Task<BaseEntity> UpdateAsync(BaseEntity entity)
+        public virtual async Task<TEntity> UpdateAsync(TEntity entity)
         {
-            BaseEntity entityFromDb = await _repository.EditAsync(entity);
+            TEntity entityFromDb = await _repository.EditAsync(entity);
             await _context.SaveChangesAsync();
 
             return entityFromDb;
         }
-        public virtual async Task<BaseEntity> DeleteByIdAsync(Guid id)
+        public virtual async Task<TEntity> DeleteByIdAsync(Guid id)
         {
-            BaseEntity entityFromDb = await _repository.DeleteAsync(id);
+            TEntity entityFromDb = await _repository.DeleteAsync(id);
             await _context.SaveChangesAsync();
 
             return entityFromDb;
