@@ -1,4 +1,4 @@
-﻿namespace ECommerce
+﻿namespace ECommerce.MapperProfiles
 {
     using AutoMapper;
 

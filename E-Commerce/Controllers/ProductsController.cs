@@ -9,7 +9,7 @@
     [ApiController]
     public class ProductsController : BaseController<Product, ProductViewModel>
     {
-        public ProductsController(IProductUnitOfWork unitOfWork, IMapper mapper, IValidator<ProductViewModel> validator)
+        public ProductsController(IProductUnitOfWork unitOfWork, IMapper mapper, IValidator<ProductViewModel> validator) 
             : base(unitOfWork, mapper, validator)
         {
         }
