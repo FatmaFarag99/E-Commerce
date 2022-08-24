@@ -11,9 +11,9 @@ namespace ECommerce.Common
         where TEntity : BaseEntity
         where TViewModel : BaseViewModel
     {
-        private readonly IBaseUnitOfWork<TEntity> _unitOfWork;
-        private readonly IMapper _mapper;
-        private readonly IValidator<TViewModel> _validator;
+        protected readonly IBaseUnitOfWork<TEntity> _unitOfWork;
+        protected readonly IMapper _mapper;
+        protected readonly IValidator<TViewModel> _validator;
 
         public BaseController(IBaseUnitOfWork<TEntity> unitOfWork, IMapper mapper, IValidator<TViewModel> validator)
         {
@@ -23,14 +23,14 @@ namespace ECommerce.Common
         }
 
         [HttpGet]
-        public async Task<IEnumerable<TViewModel>> Get()
+        public virtual async Task<IEnumerable<TViewModel>> Get()
         {
             List<TEntity> entities = await _unitOfWork.ReadAsync();
             return entities.Select(product => _mapper.Map<TViewModel>(product));
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
+        public virtual async Task<IActionResult> Get(Guid id)
         {
             TEntity product = await _unitOfWork.ReadByIdAsync(id);
             TViewModel productViewModel = _mapper.Map<TViewModel>(product);
