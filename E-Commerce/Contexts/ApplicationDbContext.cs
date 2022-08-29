@@ -1,10 +1,10 @@
 ﻿namespace ECommerce
 {
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
 
-    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
+    //public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : DbContext
     {
         protected ApplicationDbContext()
         {
@@ -19,6 +19,8 @@
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(Product).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(Category).Assembly);
         }
     }
 }
