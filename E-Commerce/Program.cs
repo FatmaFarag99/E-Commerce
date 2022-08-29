@@ -11,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 ConfigurationManager configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options
@@ -20,9 +22,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 });
 
+
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+
 
 builder.Services.AddAuthentication(options =>
 {
@@ -30,6 +34,7 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
 })
+
 
 // Adding Jwt Bearer
 .AddJwtBearer(options =>
@@ -45,6 +50,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
     };
 });
+
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductUnitOfWork, ProductUnitOfWork>();
