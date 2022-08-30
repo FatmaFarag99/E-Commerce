@@ -12,6 +12,6 @@
 
         //[JsonIgnore]
         //public List<ProductCategoryViewModel> ProductCategories { get; set; }
-        public List<ProductViewModel> Products { get; set; }
+       // public List<ProductViewModel> Products { get; set; }
     }
 }

@@ -11,11 +11,11 @@
         {
         }
 
-        public override async Task<List<Product>> GetAllAsync()
-        {
-            return await _table
-                .Include(p => p.ProductCategories)
-                .ToListAsync();
-        }
+        //public override async Task<List<Product>> GetAllAsync()
+        //{
+        //    return await _table
+        //        .Include(p => p.ProductCategories)
+        //        .ToListAsync();
+        //}
     }
 }

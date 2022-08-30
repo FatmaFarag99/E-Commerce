@@ -15,29 +15,29 @@
         {
         }
 
-        [HttpGet]
-        public override async Task<IEnumerable<CategoryViewModel>> Get()
-        {
-            List<Category> categories = await _unitOfWork.ReadAsync();
-            List<CategoryViewModel> categoryViewModels = categories.Select(category =>
-            {
-                CategoryViewModel categoryViewModel = _mapper.Map<CategoryViewModel>(category);
-                categoryViewModel.Products = category.ProductCategories?.Select(pc => _mapper.Map<ProductViewModel>(pc.Product)).ToList();
-                return categoryViewModel;
-            }).ToList();
+        //[HttpGet]
+        //public override async Task<IEnumerable<CategoryViewModel>> Get()
+        //{
+        //    List<Category> categories = await _unitOfWork.ReadAsync();
+        //    List<CategoryViewModel> categoryViewModels = categories.Select(category =>
+        //    {
+        //        CategoryViewModel categoryViewModel = _mapper.Map<CategoryViewModel>(category);
+        //        categoryViewModel.Products = category.ProductCategories?.Select(pc => _mapper.Map<ProductViewModel>(pc.Product)).ToList();
+        //        return categoryViewModel;
+        //    }).ToList();
 
-            return categoryViewModels;
-        }
+        //    return categoryViewModels;
+        //}
 
-        [HttpGet("{id}")]
-        public override async Task<IActionResult> Get(Guid id)
-        {
-            Category category = await _unitOfWork.ReadByIdAsync(id);
-            var categoryViewModel = _mapper.Map<CategoryViewModel>(category);
+        //[HttpGet("{id}")]
+        //public override async Task<IActionResult> Get(Guid id)
+        //{
+        //    Category category = await _unitOfWork.ReadByIdAsync(id);
+        //    var categoryViewModel = _mapper.Map<CategoryViewModel>(category);
 
-            categoryViewModel.Products = category.ProductCategories?.Select(pc => _mapper.Map<ProductViewModel>(pc.Product)).ToList();
+        //    categoryViewModel.Products = category.ProductCategories?.Select(pc => _mapper.Map<ProductViewModel>(pc.Product)).ToList();
 
-            return Ok(categoryViewModel);
-        }
+        //    return Ok(categoryViewModel);
+        //}
     }
 }

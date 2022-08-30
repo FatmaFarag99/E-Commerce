@@ -14,6 +14,6 @@
         public decimal Price { get; set; }
         public float Rate { get; set; }
 
-        public List<ProductCategoryViewModel> ProductCategories { get; set; }
+       // public List<ProductCategoryViewModel> ProductCategories { get; set; }
     }
 }
