@@ -9,9 +9,6 @@
         public string NameSecondLanguage { get; set; }
         public string Description { get; set; }
         public string DescriptionSecondLanguage { get; set; }
-
-        //[JsonIgnore]
-        //public List<ProductCategoryViewModel> ProductCategories { get; set; }
-       // public List<ProductViewModel> Products { get; set; }
+        public List<ProductViewModel> Products { get; set; }
     }
 }

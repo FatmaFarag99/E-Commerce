@@ -12,20 +12,18 @@
         {
         }
 
-        //public override async Task<List<Category>> GetAllAsync()
-        //{
-        //    return await _table
-        //        .Include(c => c.ProductCategories)
-        //            .ThenInclude(pc => pc.Product)
-        //        .ToListAsync();
-        //}
+        public override async Task<List<Category>> GetAllAsync()
+        {
+            return await _table
+                .Include(c => c.Products)
+                .ToListAsync();
+        }
 
-        //public override async Task<Category> GetByIdAsync(Guid id)
-        //{
-        //    return await _table
-        //        .Include(c => c.ProductCategories)
-        //            .ThenInclude(pc => pc.Product)
-        //        .FirstOrDefaultAsync(c => c.Id == id);
-        //}
+        public override async Task<Category> GetByIdAsync(Guid id)
+        {
+            return await _table
+                .Include(c => c.Products)
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
     }
 }

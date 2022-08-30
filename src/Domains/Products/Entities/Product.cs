@@ -13,7 +13,6 @@
         //public byte[] Image { get; set; }
         public decimal Price { get; set; }
         public float Rate { get; set; }
-      //  public Category Category { get; set; }
         public Guid CategoryId { get; set; }
 
     }

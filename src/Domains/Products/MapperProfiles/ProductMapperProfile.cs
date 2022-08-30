@@ -10,11 +10,11 @@
         }
     }
 
-    public class ProductCategoryMapperProfile : Profile
-    {
-        public ProductCategoryMapperProfile()
-        {
-            CreateMap<ProductCategory, ProductCategoryViewModel>().ReverseMap();
-        }
-    }
+    //public class ProductCategoryMapperProfile : Profile
+    //{
+    //    public ProductCategoryMapperProfile()
+    //    {
+    //        CreateMap<ProductCategory, ProductCategoryViewModel>().ReverseMap();
+    //    }
+    //}
 }

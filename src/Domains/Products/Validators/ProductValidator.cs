@@ -1,7 +1,6 @@
 ﻿namespace ECommerce
 {
     using FluentValidation;
-
     public class ProductValidator : AbstractValidator<ProductViewModel>
     {
         public ProductValidator()
