@@ -4,6 +4,7 @@ using ECommerce;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ECommerce.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220901082248_AddOrders")]
+    partial class AddOrders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,14 +137,9 @@ namespace ECommerce.Migrations
                     b.Property<float>("Rate")
                         .HasColumnType("real");
 
-                    b.Property<Guid?>("SellerId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("SellerId");
 
                     b.ToTable("Products", (string)null);
                 });
@@ -183,28 +180,6 @@ namespace ECommerce.Migrations
                     b.ToTable("Order");
                 });
 
-            modelBuilder.Entity("Sellers.Entities.Seller", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<byte[]>("ConcurrencyStamp")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(400)
-                        .HasColumnType("nvarchar(400)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Seller");
-                });
-
             modelBuilder.Entity("ECommerce.Product", b =>
                 {
                     b.HasOne("ECommerce.Category", null)
@@ -212,10 +187,6 @@ namespace ECommerce.Migrations
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Sellers.Entities.Seller", null)
-                        .WithMany("Products")
-                        .HasForeignKey("SellerId");
                 });
 
             modelBuilder.Entity("Orders.Entities.Order", b =>
@@ -233,11 +204,6 @@ namespace ECommerce.Migrations
                 });
 
             modelBuilder.Entity("ECommerce.Category", b =>
-                {
-                    b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("Sellers.Entities.Seller", b =>
                 {
                     b.Navigation("Products");
                 });
