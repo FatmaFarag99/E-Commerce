@@ -23,6 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Customers\Customers.csproj" />
+    <ProjectReference Include="..\Orders\Orders.csproj" />
+    <ProjectReference Include="..\Sellers\Sellers.csproj" />
     <ProjectReference Include="..\src\Domains\Categories\Categories.csproj" />
     <ProjectReference Include="..\src\Domains\Products\Products.csproj" />
     <ProjectReference Include="..\src\ECommerce.Common\ECommerce.Common.csproj" />

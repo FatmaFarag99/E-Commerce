@@ -1,3 +1,6 @@
+using Customers.Entities;
+using Customers.Repositories;
+using Customers.UnitOfWorks;
 using ECommerce;
 using ECommerce.Common;
 using FluentValidation;
@@ -5,6 +8,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Orders.Entities;
+using Orders.Repositories;
+using Orders.UnitOfWorks;
+using Sellers.Entities;
+using Sellers.Repositories;
+using Sellers.UnitOfWorks;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -56,6 +65,15 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProductUnitOfWork, ProductUnitOfWork>();
 
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<ICustomerUnitOfWork, CustomerUnitOfWork>();
+
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderUnitOfWork, OrderUnitOfWork>();
+
+builder.Services.AddScoped<ISellerRepository, SellerRepository>();
+builder.Services.AddScoped<ISellerUnitOfWork, SellerUnitOfWork>();
+
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 //builder.Services.AddScoped<ICategoryUnitOfWork, CategoryUnitOfWork>();
 
@@ -64,13 +82,21 @@ builder.Services.AddScoped(typeof(IBaseUnitOfWork<>), typeof(BaseUnitOfWork<>));
 
 
 
-builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(Product).Assembly, typeof(Category).Assembly);
+builder.Services.AddAutoMapper(typeof(Program).Assembly, 
+    typeof(Product).Assembly,
+    typeof(Category).Assembly,
+    typeof(Customer).Assembly,
+    typeof(Order).Assembly,
+    typeof(Seller).Assembly);
 
 // TODO: Find easier way
 builder.Services.AddValidatorsFromAssemblies(new List<Assembly> {
     typeof(Program).Assembly,
     typeof(Product).Assembly,
-    typeof(Category).Assembly
+    typeof(Category).Assembly,
+    typeof(Customer).Assembly,
+    typeof(Order).Assembly,
+    typeof(Seller).Assembly
 });
 
 
